@@ -1,9 +1,6 @@
 package com.financy.financy.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.financy.financy.responseDTO.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +11,10 @@ import com.financy.financy.entity.Responsavel;
 import com.financy.financy.enums.Status;
 import com.financy.financy.repository.DividaRepository;
 import com.financy.financy.requestDTO.DividaRequestDTO;
-import com.financy.financy.responseDTO.CredorResponseDTO;
-import com.financy.financy.responseDTO.DividaResponseDTO;
-import com.financy.financy.responseDTO.ParcelaResponseDTO;
-import com.financy.financy.responseDTO.ResponsavelResponseDTO;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DividaService {
@@ -86,12 +83,23 @@ public class DividaService {
         return valorCompra / quantidadeParcelas;
     }
 
-    public List<DividaResponseDTO> findAll() {
-        return this.dividaRepository.findAll().stream().map(dividas -> {
-            DividaResponseDTO dividaResponseDTO = this.modelMapper.map(dividas, DividaResponseDTO.class);
-            // Fazer a busca pelo id dos caras para preencher os modelMapper
-            // Depois realizar a inserção dos dados no mapper de dividas
-        }).collect(Collectors.toList());
+    public List<DividaResumeResponseDTO> findAll() {
+
+        List<Divida> dividas = this.dividaRepository.findAll();
+        List<DividaResumeResponseDTO> dividasResponseDTO = new ArrayList<>();
+
+        for (Divida listaDivida : dividas) {
+            DividaResumeResponseDTO dividaResponseDTO = new DividaResumeResponseDTO();
+              dividaResponseDTO.setId(listaDivida.getId());
+              dividaResponseDTO.setNome(listaDivida.getNome());
+              dividaResponseDTO.setDataCompra(listaDivida.getDataCompra());
+              dividaResponseDTO.setStatus(listaDivida.getStatus());
+              dividaResponseDTO.setValor(listaDivida.getValor());
+              dividaResponseDTO.setParcela(listaDivida.getParcela());
+              dividaResponseDTO.setValorParcelas(listaDivida.getValorParcelas());
+              dividasResponseDTO.add(dividaResponseDTO);
+        }
+        return dividasResponseDTO;
     }
 
     public DividaResponseDTO udateDivida(Long id) {

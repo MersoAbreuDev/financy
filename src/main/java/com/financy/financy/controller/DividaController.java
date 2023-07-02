@@ -2,6 +2,7 @@ package com.financy.financy.controller;
 
 import java.util.List;
 
+import com.financy.financy.responseDTO.DividaResumeResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +36,8 @@ public class DividaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DividaResponseDTO>> getAll() {
-        List<DividaResponseDTO> dividas = this.dividaService.findAll();
+    public ResponseEntity<List<DividaResumeResponseDTO>> getAll() {
+        List<DividaResumeResponseDTO> dividas = this.dividaService.findAll();
         return ResponseEntity.ok().body(dividas);
     }
 
