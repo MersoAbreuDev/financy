@@ -15,7 +15,7 @@ public class ParcelaResponseDTO implements Serializable {
 
     private Double valorParcela;
 
-    private Divida divida;
+
 
     public Long getId() {
         return this.id;
@@ -41,12 +41,5 @@ public class ParcelaResponseDTO implements Serializable {
         this.valorParcela = valorParcela;
     }
 
-    public Divida getDivida() {
-        return this.divida;
-    }
-
-    public void setDivida(Divida divida) {
-        this.divida = divida;
-    }
 
 }

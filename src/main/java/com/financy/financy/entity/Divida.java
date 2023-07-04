@@ -122,12 +122,12 @@ public class Divida implements Serializable {
         this.responsavel = responsavel;
     }
 
-    // public List<Parcela> getParcelas() {
-    // return this.parcelas;
-    // }
+     public List<Parcela> getParcelas() {
+     return this.parcelas;
+     }
 
-    // public void setParcelas(List<Parcela> parcelas) {
-    // this.parcelas = parcelas;
-    // }
+     public void setParcelas(List<Parcela> parcelas) {
+     this.parcelas = parcelas;
+     }
 
 }

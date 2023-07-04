@@ -64,7 +64,6 @@ public class DividaService {
             List<ParcelaResponseDTO> parcelasResponseDTO = new ArrayList<>();
             for (Parcela parcela : parcelas) {
                 ParcelaResponseDTO par = new ParcelaResponseDTO();
-                par.setDivida(parcela.getDivida());
                 par.setId(parcela.getId());
                 par.setStatus(parcela.getStatus());
                 par.setValorParcela(parcela.getValorParcela());
@@ -134,6 +133,15 @@ public class DividaService {
 
     public Double totalDividaAberta(Status status) {
         return this.dividaRepository.sumDividaAberta(status);
+    }
+
+
+    public List<ParcelaResponseDTO> findByIdDividaParcelas(Long id) {
+        Divida divida = this.dividaRepository.findById(id).get();
+        List<ParcelaResponseDTO> parcelaResponseDTOS = divida.getParcelas().stream()
+                .map(parcela -> modelMapper.map(parcela, ParcelaResponseDTO.class))
+                .collect(Collectors.toList());
+        return parcelaResponseDTOS;
     }
 
 }

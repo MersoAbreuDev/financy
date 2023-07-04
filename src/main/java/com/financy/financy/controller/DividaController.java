@@ -2,7 +2,9 @@ package com.financy.financy.controller;
 
 import java.util.List;
 
+import com.financy.financy.entity.Parcela;
 import com.financy.financy.responseDTO.DividaResumeResponseDTO;
+import com.financy.financy.responseDTO.ParcelaResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,8 +78,13 @@ public class DividaController {
 
     @GetMapping("/valor-total-dividas")
     public ResponseEntity<Double> somaDividasAberta(Status status) {
-        Double valorTotal = this.dividaService.totalDividaAberta(status);
-        return ResponseEntity.ok().body(valorTotal);
+        return ResponseEntity.ok().body(this.dividaService.totalDividaAberta(status));
+    }
+
+    @GetMapping("/{id}/parcelas")
+    public ResponseEntity<List<ParcelaResponseDTO>> pagarParcelaDivida(@PathVariable("id") Long id){
+        List<ParcelaResponseDTO> parcelas = this.dividaService.findByIdDividaParcelas(id);
+       return ResponseEntity.ok().body(parcelas);
     }
 
 }
