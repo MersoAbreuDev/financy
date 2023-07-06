@@ -11,7 +11,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AuthenticationService {
 
     private final UsuarioRepository repository;
@@ -31,7 +33,7 @@ public class AuthenticationService {
 
     public AuthenticationResponseDTO register(RegisterRequestDTO requestDTO) {
         var usuario = Usuario.builder()
-                .cpf(requestDTO.getEmail())
+                .email(requestDTO.getEmail())
                 .senha(passwordEncoder.encode(requestDTO.getSenha()))
                 .role(Role.buscarRole(requestDTO.getRole()))
                 .build();
@@ -46,13 +48,13 @@ public class AuthenticationService {
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO requestDTO) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        requestDTO.getCpfRa(),
+                        requestDTO.getEmail(),
                         requestDTO.getSenha()
                 )
         );
-        var user = repository.findByCpfRa(requestDTO.getCpfRa()).orElseThrow(() -> new UsernameNotFoundException("Usuario nao encontrado"));
+        var user = repository.findByEmail(requestDTO.getEmail()).orElseThrow(() -> new UsernameNotFoundException("Usuario nao encontrado"));
         String nome;
-        if (user.getCpf().length() == 11) {
+        if (user.getEmail().length() == 11) {
             //  Professor professor = this.professorService.buscarOProfessorPeloCpf(usuario.getCpfRa());
             //  nome = professor.getNome();
             nome = "Loko";

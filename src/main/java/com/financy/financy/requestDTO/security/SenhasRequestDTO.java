@@ -18,15 +18,15 @@ public class SenhasRequestDTO implements Serializable {
     private String senha02;
 
 
-    private String cpfRa;
+    private String cpf;
 
 
-    public String getCpfRa() {
-        return cpfRa;
+    public String getCpf() {
+        return cpf;
     }
 
     public void setCpfRa(String cpfRa) {
-        this.cpfRa = cpfRa;
+        this.cpf = cpfRa;
     }
 
     public String getSenha01() {

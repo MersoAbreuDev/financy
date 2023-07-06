@@ -11,23 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AuthenticationRequestDTO {
 
-    private String cpfRa;
+    private String email;
 
     private  String senha;
 
-    public String getCpfRa() {
-        return cpfRa;
-    }
 
-    public void setCpfRa(String cpfRa) {
-        this.cpfRa = cpfRa;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
 }

@@ -5,7 +5,9 @@ import com.financy.financy.repository.security.UsuarioRepository;
 import com.financy.financy.security.jwt.JwtService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UsuarioService {
 
     private final UsuarioRepository repository;
