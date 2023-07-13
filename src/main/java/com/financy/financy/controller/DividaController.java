@@ -2,20 +2,11 @@ package com.financy.financy.controller;
 
 import java.util.List;
 
-import com.financy.financy.entity.Parcela;
 import com.financy.financy.responseDTO.DividaResumeResponseDTO;
 import com.financy.financy.responseDTO.ParcelaResponseDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.financy.financy.entity.Divida;
 import com.financy.financy.enums.Status;
 import com.financy.financy.requestDTO.DividaRequestDTO;
 import com.financy.financy.responseDTO.DividaResponseDTO;
@@ -71,7 +62,7 @@ public class DividaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) throws Exception {
         this.dividaService.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -85,6 +76,12 @@ public class DividaController {
     public ResponseEntity<List<ParcelaResponseDTO>> pagarParcelaDivida(@PathVariable("id") Long id){
         List<ParcelaResponseDTO> parcelas = this.dividaService.findByIdDividaParcelas(id);
        return ResponseEntity.ok().body(parcelas);
+    }
+
+    @PostMapping("/relatorio/{id}")
+    public ResponseEntity<DividaResponseDTO> gerarRelatorioPDF(@PathVariable("id") Long id){
+
+        return ResponseEntity.ok().body(this.dividaService.gerarPDF(id));
     }
 
 }

@@ -3,11 +3,7 @@ package com.financy.financy.entity;
 import java.io.Serializable;
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 @Entity
 public class Credor implements Serializable {
@@ -20,7 +16,7 @@ public class Credor implements Serializable {
 
     private String nome;
 
-    @OneToMany(mappedBy = "credor")
+    @OneToMany(mappedBy = "credor",cascade = CascadeType.ALL)
     private List<Divida> dividas;
 
     public Long getId() {

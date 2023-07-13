@@ -22,4 +22,6 @@ public interface DividaRepository extends JpaRepository<Divida, Long> {
     @Query("SELECT SUM(div.valor) FROM Divida div WHERE div.status = :status")
     Double sumDividaAberta(@Param(value = "status") Status status);
 
+
+
 }

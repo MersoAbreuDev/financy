@@ -1,7 +1,13 @@
 package com.financy.financy.service;
 
-import com.financy.financy.responseDTO.*;
+import com.financy.financy.relatorios.DividaRelatorio;
+import com.financy.financy.responseDTO.DividaResponseDTO;
+import com.financy.financy.responseDTO.DividaResumeResponseDTO;
+import com.financy.financy.responseDTO.ParcelaResponseDTO;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import org.modelmapper.ModelMapper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.financy.financy.entity.Credor;
@@ -12,6 +18,7 @@ import com.financy.financy.enums.Status;
 import com.financy.financy.repository.DividaRepository;
 import com.financy.financy.requestDTO.DividaRequestDTO;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,57 +32,83 @@ public class DividaService {
     private final CredorService credorService;
     private final ResponsavelService responsavelService;
 
+    private final EntityManager entityManager;
+
+    private final DividaRelatorio dividaRelatorio;
+
     public DividaService(DividaRepository dividaRepository,
-            ModelMapper modelMapper, ParcelaService parcelaService,
-            CredorService credorService, ResponsavelService responsavelService) {
+                         ModelMapper modelMapper, ParcelaService parcelaService,
+                         CredorService credorService, ResponsavelService responsavelService,
+                         EntityManager entityManager, DividaRelatorio dividaRelatorio) {
         this.dividaRepository = dividaRepository;
         this.modelMapper = modelMapper;
         this.parcelaService = parcelaService;
         this.credorService = credorService;
         this.responsavelService = responsavelService;
+        this.entityManager = entityManager;
+        this.dividaRelatorio = dividaRelatorio;
     }
 
     // Necessita realizar a validação do credor e setar na mão, sem que deixe o
     // model mapper realizar, para o credor e tambem para o responsavel
     public DividaResponseDTO save(DividaRequestDTO dividaRequestDTO) {
         try {
+            Credor credor = credorService.findByIdCredor(dividaRequestDTO.getIdCredor());
+            Responsavel responsavel = responsavelService.findByIdResponsavel(dividaRequestDTO.getIdResponsavel());
+            Divida divida = modelMapper.map(dividaRequestDTO, Divida.class);
 
-            Credor credor = this.credorService.findByIdCredor(dividaRequestDTO.getIdCredor());
-            Responsavel responsavel = this.responsavelService.findByIdResponsavel(dividaRequestDTO.getIdResponsavel());
-
-            Divida divida = this.modelMapper.map(dividaRequestDTO, Divida.class);
-
-            Double valorParcela = this.parcelas(divida.getParcela(), divida.getValor());
+            Double valorParcela = parcelas(divida.getParcela(), divida.getValor());
             divida.setStatus(Status.ABERTO);
+            divida.setDataCompra(divida.getDataCompra());
             divida.setResponsavel(responsavel);
             divida.setCredor(credor);
             divida.setValorParcelas(valorParcela);
-            divida = this.dividaRepository.save(divida);
-            List<Parcela> parcelas = new ArrayList<>();
-            for (int i = 0; i < divida.getParcela(); i++) {
-                Parcela parcela = new Parcela();
+            divida = dividaRepository.save(divida);
 
-                parcela.setDivida(divida);
-                parcela.setStatus(divida.getStatus());
-                parcela.setValorParcela(divida.getValorParcelas());
-                parcela = this.parcelaService.salvaParcela(parcela);
-                parcelas.add(parcela);
+            List<Parcela> parcelas = new ArrayList<>();
+            if(divida.getParcela() == 1){
+                for (int i = 0; i < divida.getParcela(); i++) {
+                    Parcela parcela = new Parcela();
+                    parcela.setDivida(divida);
+                    parcela.setStatus(divida.getStatus());
+                    parcela.setCodigoParcela(i + 1);
+                    parcela.setValorParcela(divida.getValorParcelas());
+                    parcela.setDataVencimento(divida.getDataVencimento());
+                    parcela = parcelaService.salvaParcela(parcela);
+                    parcelas.add(parcela);
+                }
+            }else{
+                LocalDate dataVencimento = divida.getDataCompra().plusMonths(1);
+                for (int i = 0; i < divida.getParcela(); i++) {
+                    Parcela parcela = new Parcela();
+                    parcela.setDivida(divida);
+                    parcela.setStatus(divida.getStatus());
+                    parcela.setCodigoParcela(i + 1);
+                    parcela.setValorParcela(divida.getValorParcelas());
+                    parcela.setDataVencimento(((LocalDate) dataVencimento).plusMonths(i));
+                    parcela = parcelaService.salvaParcela(parcela);
+                    parcelas.add(parcela);
+                }
+
             }
+
             List<ParcelaResponseDTO> parcelasResponseDTO = new ArrayList<>();
             for (Parcela parcela : parcelas) {
                 ParcelaResponseDTO par = new ParcelaResponseDTO();
                 par.setId(parcela.getId());
                 par.setStatus(parcela.getStatus());
+                par.setDataVencimento(parcela.getDataVencimento());
+                par.setCodigoParcela(parcela.getCodigoParcela());
                 par.setValorParcela(parcela.getValorParcela());
                 parcelasResponseDTO.add(par);
             }
-            DividaResponseDTO dividaResponseDTO = this.modelMapper.map(divida, DividaResponseDTO.class);
+
+            DividaResponseDTO dividaResponseDTO = modelMapper.map(divida, DividaResponseDTO.class);
             dividaResponseDTO.setParcelas(parcelasResponseDTO);
             return dividaResponseDTO;
         } catch (Exception e) {
-            throw new RuntimeException("Erro");
+            throw new RuntimeException("Erro"+ e);
         }
-
     }
 
     public double parcelas(Integer quantidadeParcelas, Double valorCompra) {
@@ -90,6 +123,8 @@ public class DividaService {
         for (Divida listaDivida : dividas) {
             DividaResumeResponseDTO dividaResponseDTO = new DividaResumeResponseDTO();
               dividaResponseDTO.setId(listaDivida.getId());
+              dividaResponseDTO.setDataVencimento(listaDivida.getDataVencimento());
+              dividaResponseDTO.setCredor(listaDivida.getCredor());
               dividaResponseDTO.setNome(listaDivida.getNome());
               dividaResponseDTO.setDataCompra(listaDivida.getDataCompra());
               dividaResponseDTO.setStatus(listaDivida.getStatus());
@@ -99,6 +134,12 @@ public class DividaService {
               dividasResponseDTO.add(dividaResponseDTO);
         }
         return dividasResponseDTO;
+    }
+
+    public List<Divida> obterDividas() {
+        String jpql = "SELECT DISTINCT d FROM Divida d JOIN FETCH d.parcelas";
+        TypedQuery<Divida> query = entityManager.createQuery(jpql, Divida.class);
+        return query.getResultList();
     }
 
     public DividaResponseDTO udateDivida(Long id) {
@@ -125,10 +166,15 @@ public class DividaService {
         return this.modelMapper.map(divida, DividaResponseDTO.class);
     }
 
-    public void delete(Long id) {
-        this.dividaRepository.findById(id).ifPresent(divida -> {
-            this.dividaRepository.delete(divida);
-        });
+    public void delete(Long id) throws Exception {
+        try {
+            this.dividaRepository.findById(id).ifPresent(divida -> {
+                this.dividaRepository.delete(divida);
+            });
+        }catch (Exception e){
+            throw new RuntimeException("Não possivel realizar a exclusão devido ter Credor e responsável vinculado.");
+        }
+
     }
 
     public Double totalDividaAberta(Status status) {
@@ -137,6 +183,7 @@ public class DividaService {
 
 
     public List<ParcelaResponseDTO> findByIdDividaParcelas(Long id) {
+        this.verificaParcelasPagas(id);
         Divida divida = this.dividaRepository.findById(id).get();
         List<ParcelaResponseDTO> parcelaResponseDTOS = divida.getParcelas().stream()
                 .map(parcela -> modelMapper.map(parcela, ParcelaResponseDTO.class))
@@ -144,4 +191,48 @@ public class DividaService {
         return parcelaResponseDTOS;
     }
 
+    public void verificaParcelasPagas(Long id){
+        Divida divida = dividaRepository.findById(id).orElse(null);
+
+        if (divida != null) {
+            List<Parcela> parcelas = divida.getParcelas();
+            boolean todasParcelasPagas = parcelas.stream().allMatch(parcela -> parcela.getStatus() == Status.PAGO);
+
+            if (todasParcelasPagas) {
+                divida.setStatus(Status.PAGO);
+                dividaRepository.save(divida);
+            }
+        }
+    }
+
+    public void salvarDivida(Divida divida){
+        this.dividaRepository.save(divida);
+    }
+
+    @Scheduled(fixedDelay = 60000) // Executa a cada 1 minuto
+    public void verificarParcelasPagas() {
+
+        List<Divida> dividas = this.obterDividas();
+
+        for (Divida divida : dividas) {
+
+            boolean todasParcelasPagas = divida.getParcelas().stream()
+                    .allMatch(parcela -> parcela.getStatus().equals("pago"));
+
+            if (todasParcelasPagas) {
+                divida.setStatus(Status.PAGO);
+
+                salvarDivida(divida);
+            }
+        }
+    }
+
+    public DividaResponseDTO gerarPDF(Long id) {
+        DividaResponseDTO dividaResponseDTO = this.buscaPorId(id);
+        Divida divida = new Divida();
+        divida.setStatus(dividaResponseDTO.getStatus());
+        dividaRelatorio.gerarRelatorioPDF(divida);
+
+        return dividaResponseDTO;
+    }
 }

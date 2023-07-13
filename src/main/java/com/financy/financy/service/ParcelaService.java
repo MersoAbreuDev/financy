@@ -2,7 +2,6 @@ package com.financy.financy.service;
 
 
 import com.financy.financy.enums.Status;
-import com.financy.financy.responseDTO.DividaResponseDTO;
 import com.financy.financy.responseDTO.ParcelaResponseDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -38,4 +37,9 @@ public class ParcelaService {
         return this.modelMapper.map(parcela, ParcelaResponseDTO.class);
 
     }
+
+    public Double totalParcelas(Status status) {
+        return this.parcelaRepository.sumParcelas(status);
+    }
+
 }

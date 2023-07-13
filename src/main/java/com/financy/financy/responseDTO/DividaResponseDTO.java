@@ -28,6 +28,10 @@ public class DividaResponseDTO implements Serializable {
 
     private ResponsavelResponseDTO responsavel;
 
+    private LocalDate dataVencimento;
+
+    private int codigoParcela;
+
     private List<ParcelaResponseDTO> parcelas;
 
     public Long getId() {
@@ -110,4 +114,19 @@ public class DividaResponseDTO implements Serializable {
         this.parcelas = parcelas;
     }
 
+    public LocalDate getDataVencimento() {
+        return dataVencimento;
+    }
+
+    public void setDataVencimento(LocalDate dataVencimento) {
+        this.dataVencimento = dataVencimento;
+    }
+
+    public int getCodigoParcela() {
+        return codigoParcela;
+    }
+
+    public void setCodigoParcela(int codigoParcela) {
+        this.codigoParcela = codigoParcela;
+    }
 }
