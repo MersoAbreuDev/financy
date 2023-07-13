@@ -4,18 +4,11 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import com.financy.financy.enums.Status;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 
 @Entity
 public class Divida implements Serializable {
@@ -37,7 +30,9 @@ public class Divida implements Serializable {
 
     private Double valorParcelas;
 
-    @OneToMany(mappedBy = "divida")
+    private LocalDate dataVencimento;
+
+    @OneToMany(mappedBy = "divida", cascade = CascadeType.ALL)
     private List<Parcela> parcelas;
 
     @ManyToOne
@@ -130,4 +125,11 @@ public class Divida implements Serializable {
      this.parcelas = parcelas;
      }
 
+    public LocalDate getDataVencimento() {
+        return dataVencimento;
+    }
+
+    public void setDataVencimento(LocalDate dataVencimento) {
+        this.dataVencimento = dataVencimento;
+    }
 }

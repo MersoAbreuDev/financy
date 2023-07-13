@@ -48,4 +48,5 @@ public class ParcelaRequestDTO implements Serializable {
         this.idDivida = idDivida;
     }
 
+
 }

@@ -3,11 +3,7 @@ package com.financy.financy.requestDTO;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import com.financy.financy.entity.Credor;
-import com.financy.financy.entity.Responsavel;
 import com.financy.financy.enums.Status;
-import com.financy.financy.responseDTO.CredorResponseDTO;
-import com.financy.financy.responseDTO.ResponsavelResponseDTO;
 
 public class DividaRequestDTO implements Serializable {
 
@@ -18,6 +14,8 @@ public class DividaRequestDTO implements Serializable {
     private String nome;
 
     private LocalDate dataCompra;
+
+    private LocalDate dataVencimento;
 
     private Double valor;
 
@@ -93,4 +91,11 @@ public class DividaRequestDTO implements Serializable {
         this.idResponsavel = idResponsavel;
     }
 
+    public LocalDate getDataVencimento() {
+        return dataVencimento;
+    }
+
+    public void setDataVencimento(LocalDate dataVencimento) {
+        this.dataVencimento = dataVencimento;
+    }
 }

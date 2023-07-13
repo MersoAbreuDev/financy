@@ -1,6 +1,7 @@
 package com.financy.financy.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 import com.financy.financy.enums.Status;
 
@@ -22,7 +23,12 @@ public class Parcela implements Serializable {
 
     private Status status;
 
+    private int codigoParcela;
+
+    private LocalDate dataVencimento;
+
     private Double valorParcela;
+
 
     @ManyToOne
     @JoinColumn(name = "divida")
@@ -60,4 +66,19 @@ public class Parcela implements Serializable {
         this.divida = divida;
     }
 
+    public LocalDate getDataVencimento() {
+        return dataVencimento;
+    }
+
+    public void setDataVencimento(LocalDate dataVencimento) {
+        this.dataVencimento = dataVencimento;
+    }
+
+    public int getCodigoParcela() {
+        return codigoParcela;
+    }
+
+    public void setCodigoParcela(int codigoParcela) {
+        this.codigoParcela = codigoParcela;
+    }
 }
