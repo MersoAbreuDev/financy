@@ -209,7 +209,7 @@ public class DividaService {
         this.dividaRepository.save(divida);
     }
 
-    @Scheduled(fixedDelay = 60000) // Executa a cada 1 minuto
+    @Scheduled(fixedDelay = 60000)
     public void verificarParcelasPagas() {
 
         List<Divida> dividas = this.obterDividas();
