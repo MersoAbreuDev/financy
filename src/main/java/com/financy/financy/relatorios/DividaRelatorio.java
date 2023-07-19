@@ -31,21 +31,21 @@ public class DividaRelatorio {
 
             contentStream.newLineAtOffset(0, -20);
             contentStream.setFont(PDType1Font.HELVETICA, 10);
-//            contentStream.showText("ID: " + divida.getId());
-//            contentStream.newLine();
-//            contentStream.showText("Nome: " + divida.getNome());
-//            contentStream.newLine();
+            contentStream.showText("ID: " + divida.getId());
+            contentStream.newLine();
+            contentStream.showText("Nome: " + divida.getNome());
+            contentStream.newLine();
             contentStream.showText("Status: " + divida.getStatus());
             contentStream.newLine();
-//            contentStream.showText("Valor: " + divida.getValor());
-//            contentStream.newLine();
-//            contentStream.showText("Quantidade de Parcelas: " + divida.getParcela());
-//            contentStream.newLine();
-//            contentStream.showText("Valor Parcela: " + divida.getValorParcelas());
-//            contentStream.newLine();
-//            contentStream.showText("Data de Vencimento: " + divida.getDataVencimento());
-//            contentStream.newLine();
-//            contentStream.showText("Data da Compra: " + divida.getDataCompra());
+            contentStream.showText("Valor: " + divida.getValor());
+            contentStream.newLine();
+            contentStream.showText("Quantidade de Parcelas: " + divida.getParcela());
+            contentStream.newLine();
+            contentStream.showText("Valor Parcela: " + divida.getValorParcelas());
+            contentStream.newLine();
+            contentStream.showText("Data de Vencimento: " + divida.getDataVencimento());
+            contentStream.newLine();
+            contentStream.showText("Data da Compra: " + divida.getDataCompra());
             contentStream.endText();
             contentStream.close();
 
