@@ -209,23 +209,23 @@ public class DividaService {
         this.dividaRepository.save(divida);
     }
 
-    @Scheduled(fixedDelay = 60000)
-    public void verificarParcelasPagas() {
-
-        List<Divida> dividas = this.obterDividas();
-
-        for (Divida divida : dividas) {
-
-            boolean todasParcelasPagas = divida.getParcelas().stream()
-                    .allMatch(parcela -> parcela.getStatus().equals("pago"));
-
-            if (todasParcelasPagas) {
-                divida.setStatus(Status.PAGO);
-
-                salvarDivida(divida);
-            }
-        }
-    }
+//    @Scheduled(fixedDelay = 60000)
+//    public void verificarParcelasPagas() {
+//
+//        List<Divida> dividas = this.obterDividas();
+//
+//        for (Divida divida : dividas) {
+//
+//            boolean todasParcelasPagas = divida.getParcelas().stream()
+//                    .allMatch(parcela -> parcela.getStatus().equals("pago"));
+//
+//            if (todasParcelasPagas) {
+//                divida.setStatus(Status.PAGO);
+//
+//                salvarDivida(divida);
+//            }
+//        }
+//    }
 
     public DividaResponseDTO gerarPDF(Long id) {
         DividaResponseDTO dividaResponseDTO = this.buscaPorId(id);
