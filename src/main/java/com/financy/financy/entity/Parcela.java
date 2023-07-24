@@ -6,13 +6,7 @@ import java.time.LocalDate;
 import com.financy.financy.enums.Status;
 
 import jakarta.annotation.Generated;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 @Entity
 public class Parcela implements Serializable {
@@ -30,7 +24,7 @@ public class Parcela implements Serializable {
     private Double valorParcela;
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "divida")
     private Divida divida;
 
