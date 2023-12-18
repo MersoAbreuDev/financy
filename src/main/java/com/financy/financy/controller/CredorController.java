@@ -12,7 +12,7 @@ import com.financy.financy.service.CredorService;
 
 @RequestMapping("/credores")
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class CredorController {
 
     private final CredorService credorService;
