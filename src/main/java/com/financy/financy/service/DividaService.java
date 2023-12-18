@@ -1,6 +1,4 @@
 package com.financy.financy.service;
-
-import com.financy.financy.relatorios.DividaRelatorio;
 import com.financy.financy.responseDTO.DividaResponseDTO;
 import com.financy.financy.responseDTO.DividaResumeResponseDTO;
 import com.financy.financy.responseDTO.ParcelaResponseDTO;
@@ -34,19 +32,16 @@ public class DividaService {
 
     private final EntityManager entityManager;
 
-    private final DividaRelatorio dividaRelatorio;
-
     public DividaService(DividaRepository dividaRepository,
                          ModelMapper modelMapper, ParcelaService parcelaService,
                          CredorService credorService, ResponsavelService responsavelService,
-                         EntityManager entityManager, DividaRelatorio dividaRelatorio) {
+                         EntityManager entityManager) {
         this.dividaRepository = dividaRepository;
         this.modelMapper = modelMapper;
         this.parcelaService = parcelaService;
         this.credorService = credorService;
         this.responsavelService = responsavelService;
         this.entityManager = entityManager;
-        this.dividaRelatorio = dividaRelatorio;
     }
 
     // Necessita realizar a validação do credor e setar na mão, sem que deixe o
@@ -231,8 +226,6 @@ public class DividaService {
         DividaResponseDTO dividaResponseDTO = this.buscaPorId(id);
         Divida divida = new Divida();
         divida.setStatus(dividaResponseDTO.getStatus());
-        dividaRelatorio.gerarRelatorioPDF(divida);
-
         return dividaResponseDTO;
     }
 }

@@ -97,13 +97,6 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>7.0.1.Final</version>
 		</dependency>
-		<!--Dependencia Apache -->
-		<dependency>
-			<groupId>org.apache.pdfbox</groupId>
-			<artifactId>pdfbox</artifactId>
-			<version>2.0.26</version>
-		</dependency>
-
 
 		<!-- Dependencia do jwt fim -->
 		<dependency>
