@@ -54,4 +54,17 @@ public class CredorService {
         }
     }
 
+    public CredorResponseDTO delete(Long id) {
+        Credor credor = credorRepository.findById(id).get();
+       try{
+           if (!credor.equals(null)){
+               this.credorRepository.delete(credor);
+           }else {
+               System.out.println("Credor não encontrado!");
+           }
+       }catch (Exception e ){
+           System.out.printf("Error "+e.getMessage());
+       }
+        return null;
+    }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/auth")
 @Tag(name = "Authentication Controller", description = "APIs relacionadas à autenticação")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AuthenticationController {
     private final AuthenticationService service;
 
@@ -27,7 +28,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    @CrossOrigin(origins = "http://localhost:4200")
+
     @Operation(summary = "Autenticar Usuario e gerar o token", description = "Endpoint para autenticar o usuário e gerar o toekn")
     public ResponseEntity<AuthenticationResponseDTO> authenticate(
             @RequestBody AuthenticationRequestDTO requestDTO) {
